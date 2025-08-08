@@ -8,17 +8,22 @@ import { ArrowLeft, Users, GraduationCap } from "lucide-react";
 interface JoinFormProps {
   role: 'student' | 'teacher';
   onBack: () => void;
-  onJoin: (username: string, roomName: string) => void;
+  onJoin: (username: string, roomName: string, email?: string, password?: string) => void;
 }
 
 export const JoinForm = ({ role, onBack, onJoin }: JoinFormProps) => {
   const [username, setUsername] = useState("");
   const [roomName, setRoomName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [useAuth, setUseAuth] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (username.trim() && roomName.trim()) {
-      onJoin(username.trim(), roomName.trim());
+      const authEmail = useAuth ? email.trim() || undefined : undefined;
+      const authPassword = useAuth ? password.trim() || undefined : undefined;
+      onJoin(username.trim(), roomName.trim(), authEmail, authPassword);
     }
   };
 
@@ -67,6 +72,50 @@ export const JoinForm = ({ role, onBack, onJoin }: JoinFormProps) => {
                   : "Make sure you have the correct room name"
                 }
               </p>
+            </div>
+
+            {/* Optional Authentication */}
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="useAuth"
+                  checked={useAuth}
+                  onChange={(e) => setUseAuth(e.target.checked)}
+                  className="w-4 h-4"
+                />
+                <Label htmlFor="useAuth" className="text-sm">
+                  Use authentication (optional)
+                </Label>
+              </div>
+              
+              {useAuth && (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="Your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Demo credentials: tutor@example.com / tutor123 or student@example.com / student123
+                  </p>
+                </>
+              )}
             </div>
             
             <div className="space-y-3">

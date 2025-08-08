@@ -6,7 +6,7 @@ import { MeetingRoom } from "@/components/MeetingRoom";
 type AppState = 
   | { page: 'role-selection' }
   | { page: 'join-form'; role: 'student' | 'teacher' }
-  | { page: 'meeting'; role: 'student' | 'teacher'; username: string; roomName: string };
+  | { page: 'meeting'; role: 'student' | 'teacher'; username: string; roomName: string; email?: string; password?: string };
 
 const Index = () => {
   const [state, setState] = useState<AppState>({ page: 'role-selection' });
@@ -15,13 +15,15 @@ const Index = () => {
     setState({ page: 'join-form', role });
   };
 
-  const handleJoin = (username: string, roomName: string) => {
+  const handleJoin = (username: string, roomName: string, email?: string, password?: string) => {
     if (state.page === 'join-form') {
       setState({ 
         page: 'meeting', 
         role: state.role, 
         username, 
-        roomName 
+        roomName,
+        email,
+        password
       });
     }
   };
@@ -54,6 +56,8 @@ const Index = () => {
         role={state.role}
         username={state.username}
         roomName={state.roomName}
+        email={state.email}
+        password={state.password}
         onLeave={handleLeave}
       />
     );
